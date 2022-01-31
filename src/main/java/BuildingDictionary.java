@@ -16,6 +16,8 @@ public class BuildingDictionary {
         List<String> wordList = new ArrayList<>();
         Map<Character, Integer> frequency = new HashMap<>();
 
+
+
         while ((st = br.readLine()) != null) {
             wordList.add(st);
             for (Character a : st.toCharArray()) {

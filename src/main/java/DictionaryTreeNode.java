@@ -8,9 +8,6 @@ public class DictionaryTreeNode {
         return followingChar;
     }
 
-    public void setFollowingChar(Map<Character, DictionaryTreeNode> followingChar) {
-        this.followingChar = followingChar;
-    }
 
     public Map<Character, DictionaryTreeNode> followingChar;
     public String currentWord;
@@ -37,9 +34,6 @@ public class DictionaryTreeNode {
         return currentChar;
     }
 
-    public void setCurrentChar(Character currentChar) {
-        this.currentChar = currentChar;
-    }
 
 
     public void print() {

@@ -18,10 +18,6 @@ public class Util {
         List<Character> freqList = List.of('s','e','a','o','r','i','l','t','n','d','u','c','p','y','m','h','g','b','k','f','w','v','z','x','j','q');
         Map<String,Integer> freqMap = new HashMap<>();
         for(String a : guessedList){
-//            Set<Character> set = new HashSet<>();
-//            for(Character c : a.toCharArray()){
-//                set.add(c);
-//            }
             int feq = 0;
             for(Character b : a.toCharArray()){
                 feq += freqList.indexOf(b);
@@ -29,8 +25,7 @@ public class Util {
             freqMap.put(a,feq);
         }
         freqMap = sortByValue(freqMap);
-        List<String> result = new ArrayList<String>(freqMap.keySet());
-        return result;
+        return new ArrayList<>(freqMap.keySet());
     }
 
 }

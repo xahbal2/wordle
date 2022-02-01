@@ -133,10 +133,6 @@ public class BuildingDictionary {
         }
 
         wordle.setPossibleLetters(newPossibleLetters);
-//        for(WordContainer a : wordle.getWord()){
-//            System.out.print(a.color + " ");
-//        }
-//        System.out.print("\n");
 
     }
 

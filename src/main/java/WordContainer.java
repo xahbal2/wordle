@@ -8,10 +8,6 @@ public class WordContainer {
         return positionImpossibleLetters;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
     public void setColor(Color color) {
         this.color = color;
     }

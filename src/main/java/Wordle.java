@@ -64,7 +64,6 @@ class Wordle {
 
         Set<String> roughResult = new HashSet<>();
         helper(node.getFollowingChar(), 0, roughResult);
-        System.out.println("rough "+ roughResult);
         Set<String> refined = new HashSet<>(roughResult);
         if (!this.getPossibleLetters().isEmpty()) {
             for (String a : roughResult) {

@@ -60,49 +60,80 @@ class Wordle {
     }
 
 
-    public String findPossibleWord(DictionaryTreeNode node, int index, boolean hasAllPossibleWords, String solution, Set<String> lastGuess) throws Exception {
+    public List<String> findPossibleWord(DictionaryTreeNode node, int index, Set<String> lastGuess) throws Exception {
 
         Set<String> roughResult = new HashSet<>();
-        helper(node.getFollowingChar(), 0, hasAllPossibleWords, roughResult, node);
+        helper(node.getFollowingChar(), 0, roughResult);
+        System.out.println("rough "+ roughResult);
         Set<String> refined = new HashSet<>(roughResult);
         if (!this.getPossibleLetters().isEmpty()) {
             for (String a : roughResult) {
                 Set<Character> possibleLetters = new HashSet<>(this.getPossibleLetters());
                 for (int i = 0; i < 5; i++) {
-                    if (!this.getWord().get(i).isLetterGreen() && possibleLetters.contains(a.charAt(i)) && !this.getWord().get(i).getPositionImpossibleLetters().contains(a.charAt(i))) {
+                    if(!this.getWord().get(i).isLetterGreen()&& !this.getWord().get(i).getPositionImpossibleLetters().contains(a.charAt(i))&& this.getPossibleLetters().contains(a.charAt(i))){
                         possibleLetters.remove(a.charAt(i));
                     }
+                    if(this.getWord().get(i).getColor().equals(Color.YELLOW) && a.charAt(i)== this.getWord().get(i).getLetter() ||this.getWord().get(i).getPositionImpossibleLetters().contains(a.charAt(i)) ){
+                        refined.remove(a);
+                        break;
+                    }
                 }
-                if (!possibleLetters.isEmpty()) {
+                if(!possibleLetters.isEmpty()){
                     refined.remove(a);
                 }
             }
         }
-        System.out.println("rough after refined" + refined);
 
-        List<String> resultList = Util.sortResult(new ArrayList<String>(refined));
-        System.out.println(resultList);
+        List<String> resultList = Util.sortResult(new ArrayList<>(refined));
         if (resultList.isEmpty()) {
             throw new Exception("E");
         }
         for (int i = 0; i < resultList.size(); i++) {
             if (!lastGuess.contains(resultList.get(i))) {
-                return resultList.get(i);
+                return resultList;
             }
         }
         return null;
     }
 
+    public void assignColor( String color){
+        Set<Character> yellow = new HashSet<>();
 
-    private void greenLetter(Map<Character, DictionaryTreeNode> possibleLetters, int index, boolean hasAllPossibleWords, Set<String> result, DictionaryTreeNode head) {
+        for(int i =0; i<5; i++){
+            WordContainer container = this.getWord().get(i);
+            if(color.charAt(i) == 'g'){
+                container.setLetterGreen();
+            }
+            if(color.charAt(i) == 'y'){
+                container.setColor(Color.YELLOW);
+                yellow.add(container.getLetter());
+                container.getPositionImpossibleLetters().add(container.getLetter());
+            }
+            if(color.charAt(i) == 'b'){
+                this.getImpossibleLetters().add(container.getLetter());
+                container.setColor(Color.BLACK);
+                container.getPositionImpossibleLetters().add(container.getLetter());
+            }
+        }
+        for(int i =0; i<5; i++){
+            WordContainer container = this.getWord().get(i);
+            if(container.getColor().equals(Color.YELLOW) && this.getImpossibleLetters().contains(container.getLetter())){
+                this.getImpossibleLetters().remove(container.getLetter());
+            }
+        }
+        this.setPossibleLetters(yellow);
+
+
+    }
+
+
+    private void greenLetter(Map<Character, DictionaryTreeNode> possibleLetters, int index, Set<String> result) {
         WordContainer currentContainer = this.getWord().get(index);
         if (possibleLetters.containsKey(currentContainer.getLetter())) {
             helper(
                     possibleLetters.get(currentContainer.getLetter()).getFollowingChar(),
                     index + 1,
-                    hasAllPossibleWords,
-                    result,
-                    head
+                    result
             );
             if (index == 4) {
                 result.add(possibleLetters.get(currentContainer.getLetter()).getCurrentWord());
@@ -112,21 +143,20 @@ class Wordle {
     }
 
 
-    private void helper(Map<Character, DictionaryTreeNode> possibleLetters, int index, boolean hasAllPossibleWords, Set<String> result, DictionaryTreeNode head) {
-
+    private void helper(Map<Character, DictionaryTreeNode> possibleLetters, int index, Set<String> result) {
         if (index == 5) {
             return;
 
         } else if (this.getWord().get(index).isLetterGreen()) {
-            greenLetter(possibleLetters, index, hasAllPossibleWords, result, head);
+            greenLetter(possibleLetters, index, result);
         } else {
-            randomWords(possibleLetters, index, hasAllPossibleWords, result, head);
+            randomWords(possibleLetters, index, result);
 
         }
 
     }
 
-    private void randomWords(Map<Character, DictionaryTreeNode> possibleLetters, int index, boolean hasAllPossibleWords, Set<String> result, DictionaryTreeNode head) {
+    private void randomWords(Map<Character, DictionaryTreeNode> possibleLetters, int index, Set<String> result) {
         Set<Character> set = new HashSet<>(this.getImpossibleLetters());
         Map<Character, DictionaryTreeNode> newMap = new HashMap<>(possibleLetters);
         for (Character a : set) {
@@ -135,12 +165,12 @@ class Wordle {
         if (newMap.isEmpty()) {
             return;
         }
-        random(possibleLetters, index, hasAllPossibleWords, result, head, newMap);
+        random(possibleLetters, index, result, newMap);
     }
 
-    private void random(Map<Character, DictionaryTreeNode> possibleLetters, int index, boolean hasAllPossibleWords, Set<String> result, DictionaryTreeNode head, Map<Character, DictionaryTreeNode> newMap) {
+    private void random(Map<Character, DictionaryTreeNode> possibleLetters, int index, Set<String> result, Map<Character, DictionaryTreeNode> newMap) {
         for (Character a : newMap.keySet()) {
-            helper(possibleLetters.get(a).getFollowingChar(), index + 1, hasAllPossibleWords, result, head);
+            helper(possibleLetters.get(a).getFollowingChar(), index + 1, result);
             if (index == 4) {
                 result.add(possibleLetters.get(a).getCurrentWord());
             }

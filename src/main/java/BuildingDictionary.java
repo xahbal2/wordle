@@ -5,7 +5,7 @@ import java.util.*;
 
 
 public class BuildingDictionary {
-    public static void main(String[] arg) throws Exception {
+    public  static DictionaryTreeNode buildDictionary() throws Exception {
         URL res = BuildingDictionary.class.getClassLoader().getResource("words.txt");
         File file = Paths.get(res.toURI()).toFile();
 
@@ -34,72 +34,11 @@ public class BuildingDictionary {
         for (String x : wordList) {
             createDictionaryTree(x, node.getFollowingChar(), 0);
         }
-
-
-//        int totalRecur = 0;
-//        for (String a : wordList) {
-//            HashSet<String> lastGuess = new HashSet<>();
-//            Random random = new Random();
-//            String firstGuess = "arose";
-//            Wordle wordle = new Wordle(firstGuess);
-//            compareWords(a, wordle);
-//            boolean correct = false;
-//            int guessedTime = 1;
-//            while (!correct) {
-//                guessedTime++;
-//                boolean hasAllTheLetters = (wordle.getGreenLetters().size() + wordle.getPossibleLetters().size()) == 5;
-//
-//                String guess = wordle.findPossibleWord(node, 0, hasAllTheLetters,a,lastGuess);
-//                lastGuess.add(guess);
-//                if (guess == null) {
-//                    break;
-//                }
-//                wordle.setCurrentGuess(guess);
-//                compareWords(a, wordle);
-//                if (a.equals(guess)) {
-//                    System.out.println("found in " + guessedTime + "th guess");
-//                    correct = true;
-//                }
-//
-//            }
-//
-//            totalRecur += guessedTime;
-//            System.out.println("Current average" + (float) totalRecur / 8636);
-//            System.out.println(a);
-//        }
-
-
-            HashSet<String> lastGuess = new HashSet<>();
-            Random random = new Random();
-            String firstGuess = "arise";
-            Wordle wordle = new Wordle(firstGuess);
-            compareWords("light", wordle);
-            boolean correct = false;
-            int guessedTime = 1;
-            while (!correct) {
-                guessedTime++;
-                boolean hasAllTheLetters = (wordle.getGreenLetters().size() + wordle.getPossibleLetters().size()) == 5;
-
-                String guess = wordle.findPossibleWord(node, 0, hasAllTheLetters,"light",lastGuess);
-                lastGuess.add(guess);
-                System.out.println(guess);
-                if (guess == null) {
-                    break;
-                }
-                wordle.setCurrentGuess(guess);
-                compareWords("light", wordle);
-                if ("light".equals(guess)) {
-                    System.out.println("found in " + guessedTime + "th guess");
-                    correct = true;
-                }
-
-            }
+        return node;
 
     }
 
 
-
-    //
     public static void compareWords(String solution, Wordle wordle) {
         Map<Character, Integer> solutionMap = new HashMap<>();
         for (Character a : solution.toCharArray()) {
@@ -136,7 +75,7 @@ public class BuildingDictionary {
 
     }
 
-    private static void createDictionaryTree(String word, Map<Character, DictionaryTreeNode> possibleLetters, int index) throws Exception {
+    static void createDictionaryTree(String word, Map<Character, DictionaryTreeNode> possibleLetters, int index) throws Exception {
         if (word.length() != 5) {
             System.out.println("This one bad");
             return;

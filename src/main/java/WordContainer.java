@@ -12,6 +12,10 @@ public class WordContainer {
         this.color = color;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
     public Color color;
 
 
